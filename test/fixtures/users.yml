@@ -4,6 +4,6 @@ one:
   email: one@one.org
   password_digest: <%= BCrypt::Password.create('superpass') %>
 
-# two:
-#   email: MyString
-#   password_digest: MyString
+two:
+  email: MyString
+  password_digest: MyString
