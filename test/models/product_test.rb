@@ -27,4 +27,23 @@ class ProductTest < ActiveSupport::TestCase
     products(:two).touch
     assert_equal [products(:another_tv), products(:one), products(:two)], Product.recent.to_a
   end
+
+  test 'la busqueda no deberia de encontrar videojuegos con menor precio de 100' do
+    search_hash = { keyword: 'videogame', min_price: 100 }
+    assert Product.search(search_hash).empty?
+  end
+
+  test 'la busqueda deberia de encontrar la TV mas barata' do
+    search_hash = { keyword: 'tv', min_price: 50, max_price: 150}
+    assert_equal [(products(:another_tv))], Product.search(search_hash)
+  end
+
+  test 'deberia de traer todos los productos cuando la consulta esta vacia' do
+    assert_equal Product.all.to_a, Product.search({})
+  end
+
+  test 'la busqueda deberia de filtrar por ids' do
+    search_hash = { product_ids: [products(:one).id] }
+    assert_equal [products(:one)], Product.search(search_hash)
+  end
 end
