@@ -8,6 +8,17 @@ class Api::V1::ProductsControllerTest < ActionDispatch::IntegrationTest
   test 'deberia de mostrar todos los productos' do 
     get api_v1_products_url(), as: :json
     assert_response :success
+
+    json_response = JSON.parse(response.body, symbolize_names: true)
+    
+    #Forma limpia y reutilizable
+    assert_json_response_is_paginated json_response
+    
+    #Forma no util 
+    # assert_not_nil json_response.dig(:links, :first)
+    # assert_not_nil json_response.dig(:links, :last)
+    # assert_not_nil json_response.dig(:links, :prev)
+    # assert_not_nil json_response.dig(:links, :next)
   end
 
   test 'deberia de mostrar el producto' do 
@@ -15,8 +26,10 @@ class Api::V1::ProductsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    json_response = JSON.parse(self.response.body)
-    assert_equal @product.title, json_response['title']
+    json_response = JSON.parse(self.response.body, symbolize_names: true)
+    assert_equal @product.title, json_response.dig(:data, :attributes, :title)#['data']['attributes']['title']
+    assert_equal @product.user.id.to_s, json_response.dig(:data, :relationships, :user, :data, :id)
+    assert_equal @product.user.email, json_response.dig(:included, 0, :attributes, :email)
   end
 
   test 'deberia crear un producto' do 

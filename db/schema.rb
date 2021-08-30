@@ -10,7 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_24_183847) do
+ActiveRecord::Schema.define(version: 2021_08_27_162627) do
+
+  create_table "orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "total", precision: 10
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "placements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "product_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "quantity", default: 0
+    t.index ["order_id"], name: "index_placements_on_order_id"
+    t.index ["product_id"], name: "index_placements_on_product_id"
+  end
 
   create_table "products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
@@ -19,6 +37,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_183847) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "quantity", default: 0
     t.index ["user_id"], name: "index_products_on_user_id"
   end
 
@@ -30,5 +49,8 @@ ActiveRecord::Schema.define(version: 2021_08_24_183847) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "orders", "users"
+  add_foreign_key "placements", "orders"
+  add_foreign_key "placements", "products"
   add_foreign_key "products", "users"
 end

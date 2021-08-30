@@ -44,3 +44,11 @@ gem "bcrypt", "~> 3.1"
 gem "jwt", "~> 2.2"
 
 gem "faker", "~> 2.19"
+
+gem "jsonapi-serializer", "~> 2.2"
+
+gem "kaminari", "~> 1.2"
+
+gem "bullet", "~> 6.1", :group => :development
+
+gem "rack-cors", "~> 1.1"
